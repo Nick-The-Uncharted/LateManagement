@@ -6,5 +6,13 @@ target 'LateManagement' do
   use_frameworks!
 
   # Pods for LateManagement
-
+  pod "TPKeyboardAvoiding"
+  pod "Material"
+  pod 'Kingfisher'
+  pod 'SwiftyJSON'
+  pod 'SwiftMoment'
+  pod 'Alamofire'
+  pod 'XCGLogger'
+  pod 'DZNEmptyDataSet'
+  pod 'KeychainAccess'
 end
