@@ -9,3 +9,4 @@
 import Foundation
 
 typealias SimpleBlock = (Void) -> (Void)
+typealias SearchPresentable = protocol<AvatarPresentable, TitlePresentable, ContentPresentable>

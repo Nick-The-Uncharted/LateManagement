@@ -43,7 +43,7 @@ extension JSON {
     }
     
     var time: Moment {
-        return moment(self.stringProperty, dateFormat: Config.dateFormat) ?? moment()
+        return moment(self.stringProperty) ?? moment()
     }
     
     func notExists() -> Bool {

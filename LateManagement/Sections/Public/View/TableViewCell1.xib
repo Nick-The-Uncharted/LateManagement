@@ -45,6 +45,7 @@
                     <constraint firstAttribute="bottomMargin" secondItem="OAQ-NL-fdi" secondAttribute="bottom" constant="7" id="E3Z-Et-fe9"/>
                     <constraint firstAttribute="leadingMargin" secondItem="Tbg-rR-Sqa" secondAttribute="leading" id="EaF-du-0N6"/>
                     <constraint firstItem="OAQ-NL-fdi" firstAttribute="top" secondItem="UrH-qD-X9b" secondAttribute="bottom" constant="8" id="Obm-xm-i8e"/>
+                    <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="Tbg-rR-Sqa" secondAttribute="bottom" constant="5" id="UNK-Cb-gHv"/>
                     <constraint firstAttribute="topMargin" secondItem="Tbg-rR-Sqa" secondAttribute="top" id="cMp-yF-LgT"/>
                     <constraint firstAttribute="bottomMargin" secondItem="OAQ-NL-fdi" secondAttribute="bottom" id="rPK-MZ-czF"/>
                     <constraint firstItem="OAQ-NL-fdi" firstAttribute="leading" secondItem="UrH-qD-X9b" secondAttribute="leading" id="rca-d3-qPw"/>

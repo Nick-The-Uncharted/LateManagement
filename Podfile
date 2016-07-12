@@ -15,4 +15,6 @@ target 'LateManagement' do
   pod 'XCGLogger'
   pod 'DZNEmptyDataSet'
   pod 'KeychainAccess'
+  pod 'JVFloatLabeledTextField'
+  pod 'Eureka'
 end

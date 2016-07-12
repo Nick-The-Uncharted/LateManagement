@@ -14,7 +14,7 @@ class CustomTabBarController: UITabBarController {
         super.viewDidLoad()
         
         dispatch_async(dispatch_get_main_queue()) {
-            self.requestSetup()
+//            self.requestSetup()
         }
     }
     

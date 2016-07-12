@@ -8,10 +8,7 @@
 
 import UIKit
 
-class LoginViewController: UIViewController {
-    @IBOutlet weak var tableView: UITableView!
-    
-    
+class LoginTableViewController: UITableViewController {
     
 }
 
