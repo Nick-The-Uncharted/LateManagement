@@ -11,6 +11,7 @@ import SwiftMoment
 import SwiftyJSON
 
 class Meeting: JSONInitialable {
+    var id: String
     var name: String
     var location: String
     var startTime: Moment
@@ -19,6 +20,7 @@ class Meeting: JSONInitialable {
     var team: Team
 
     required init?(json: JSON) {
+        self.id = json["id"].stringProperty
         self.name = json["name"].stringProperty
         self.location = json["location"].stringProperty
         self.startTime = json["startTime"].time
@@ -28,6 +30,7 @@ class Meeting: JSONInitialable {
     }
     
     init() {
+        self.id = "id"
         self.name = "name"
         self.location = "1808"
         self.startTime = moment()
@@ -36,12 +39,23 @@ class Meeting: JSONInitialable {
         self.team = Team()
     }
     
+    func getMembers(completionHandler: ([User]?, MyError?) -> Void) {
+        MeetingAPI.getMembers(self.id, completionHandler: completionHandler)
+    }
+    
+    func setLates(lates: [Late], completionHandler: (SimpleResponseResult?, MyError?) -> Void) {
+        MeetingAPI.setLates(self.id, lates: lates, completionHandler: completionHandler)
+    }
+    
     static func getMeetings(completionHandler: ([Meeting]?, MyError?) -> Void) {
-        var meetings = [Meeting]()
-        for _ in 0 ... 10 {
-            meetings.append(Meeting())
-        }
-        
-        completionHandler(meetings, nil)
+        MeetingAPI.getMeetings(completionHandler)
+    }
+    
+    static func new(name: String, location: String, startTime: Moment, endTime: Moment, teamId: String, completionHandler: (Meeting?, MyError?) -> Void) {
+        MeetingAPI.new(name, location: location, startTime: startTime, endTime: endTime, teamId: teamId, completionHandler: completionHandler)
+    }
+    
+    func addMembers(memberIds: [String], completionHandler: (SimpleResponseResult?, MyError?) -> Void) {
+        MeetingAPI.addMeetingMembers(self.id, memberIds: memberIds, completionHandler: completionHandler)
     }
 }

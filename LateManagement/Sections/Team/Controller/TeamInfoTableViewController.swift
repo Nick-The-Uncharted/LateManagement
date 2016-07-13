@@ -16,6 +16,12 @@ class TeamInfoTableViewController: UITableViewController {
     // MARK: - Actions
     @IBAction func doneButtonTouched(sender: UIBarButtonItem) {
         // MARK: Outlet
+        self.team?.enroll {
+            _, error in
+            if let error = error {
+                ErrorHandlerCenter.handleError(error, sender: self)
+            }
+        }
         CustomTabBarController.becomeRootViewController()
     }
     

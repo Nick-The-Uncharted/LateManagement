@@ -12,6 +12,10 @@ class SearchTableViewController: UITableViewController, UISearchResultsUpdating 
     let searchController = UISearchController(searchResultsController: nil)
     var presenters = [SearchPresentable]()
     var filteredPresenters = [SearchPresentable]()
+    var selectedIndexes = Set<NSIndexPath>()
+    var selelctedPresenters: [SearchPresentable] {
+        return selectedIndexes.map {$0.row}.sort().map {presenters[$0]}
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,17 +88,37 @@ class SearchTableViewController: UITableViewController, UISearchResultsUpdating 
             log.error("no user at index \(indexPath)")
         }
         
+        if selectedIndexes.contains(indexPath) {
+            cell.accessoryType = .Checkmark
+        } else {
+            cell.accessoryType = .None
+        }
         
-        cell.accessoryType = .Checkmark
         return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
+        guard let cell = tableView.cellForRowAtIndexPath(indexPath) else {return}
+        if selectedIndexes.contains(indexPath) {
+            selectedIndexes.remove(indexPath)
+            cell.accessoryType = .None
+        } else {
+            selectedIndexes.insert(indexPath)
+            cell.accessoryType = .Checkmark
+        }
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
     }
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
-        self.filteredPresenters = self.presenters.filter {presenter in presenter.title.containsString(searchController.searchBar.text!)}
+        if searchController.searchBar.text!.isEmpty {
+            self.filteredPresenters = self.presenters
+        } else {
+            self.filteredPresenters = self.presenters.filter {presenter in
+                presenter.title.containsString(searchController.searchBar.text!)
+                || presenter.content.containsString(searchController.searchBar.text!)
+            }
+        }
+        
         self.tableView.reloadData()
     }
 }

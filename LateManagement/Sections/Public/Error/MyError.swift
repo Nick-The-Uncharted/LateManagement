@@ -10,4 +10,9 @@ import Foundation
 
 enum MyError: ErrorType {
     case Unknown(String)
+    case ServerError(String)
+    
+    // login erorr
+    case NetworkError, WrongPassword
+    case NoEmail
 }

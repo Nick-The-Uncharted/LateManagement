@@ -19,7 +19,7 @@ class Team: JSONInitialable {
     init() {
         self.id = ""
         self.name = ""
-        self.manager = User(id: "", email: "", name: "", team: nil)
+        self.manager = User()
         self.members = []
     }
     
@@ -30,15 +30,20 @@ class Team: JSONInitialable {
         self.members = json["members"].flatMap{User(json: $1)}
     }
     
-    static func getAllTeams(start: Int = 0, end: Int = -1, completionHandler: ([Team]?, MyError?) -> Void) {
-        var teams = [Team]()
-        for i in 0 ... 10 {
-            teams.append(Team(json: JSON(["id": "id\(i)", "name": "name\(i)"]))!)
-            for _ in 0 ... 10 {
-                teams[i].members.append(User(id: "id\(i)", email: "email\(i)", name: "name\(i)", team: Team()))
+    static func new(name: String, managerId: String, memberIds: [String], completionHandler: (Team?, MyError) -> Void) {
+        TeamAPI.new(name, managerId: managerId, memberIds: memberIds) {
+            team, error in
+            if let error = error {
+                ErrorHandlerCenter.handleError(error)
+            } else if let team = team {
+                log.info("create team \(team.name) success")
+                User.loginUser?.teams.append(team)
             }
         }
-        completionHandler(teams, nil)
+    }
+    
+    static func getAllTeams(start: Int = 0, end: Int = -1, completionHandler: ([Team]?, MyError?) -> Void) {
+        TeamAPI.getAllTeams(completionHandler)
     }
     
     func getLates(start: Int = 0, end: Int = -1, completionHandler: (([Punishment]?, MyError?) -> Void)) {
@@ -47,5 +52,17 @@ class Team: JSONInitialable {
             lates.append(Punishment())
         }
         completionHandler(lates, nil)
+    }
+    
+    func getPunishmentSum(completionHandler: (Int?, MyError?) -> Void) {
+        TeamAPI.getTeamPunishmentSum(self.id, completionHandler: completionHandler)
+    }
+    
+    func consume(name: String, amount: Int, completionHandler: (SimpleResponseResult?, MyError?) -> Void) {
+        TeamAPI.consume(self.id, name: name, amount: amount, completionHandler: completionHandler)
+    }
+    
+    func enroll(completionHandler: (SimpleResponseResult?, MyError?) -> Void) {
+        TeamAPI.enroll(self.id, completionHandler: completionHandler)
     }
 }

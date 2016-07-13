@@ -7,10 +7,17 @@
 //
 
 import UIKit
+import CBStoreHouseRefreshControl
 
 class MineMainTableViewController: UITableViewController {
     @IBOutlet weak var avatarImageView: UIImageView!
     var punishments = [Punishment]()
+    var storeHouseRefreshControl: CBStoreHouseRefreshControl?
+    var isLoading = false {
+        didSet {
+            self.tableView.reloadEmptyDataSet()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,20 +26,38 @@ class MineMainTableViewController: UITableViewController {
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 80
 
+        self.tableView.tableFooterView = UIView(frame: .zero)
+        
         self.tableView.registerReusableCell(MeetingTableViewCell.self)
+        self.tableView.emptyDataSetSource = self
+        self.tableView.emptyDataSetDelegate = self
+        
+        self.storeHouseRefreshControl = CBStoreHouseRefreshControl.attachToScrollView(self.tableView, target: self, refreshAction: #selector(MineMainTableViewController.getInitPunishments), plist: "storehouse", color: UIColor.blackColor(), lineWidth: 2.0, dropHeight: 60, scale: 1, horizontalRandomness: 150, reverseLoadingAnimation: false, internalAnimationFactor: 0.5)
+        
+        self.tableView.emptyDataSetSource = self
+        self.tableView.emptyDataSetDelegate = self
+    }
+    
+    
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         self.getInitPunishments()
     }
 
     // MARK: - Table view data source
     func getInitPunishments() {
+        self.isLoading = true
         User.loginUser?.getPunishments {
             punishments, error in
+            self.isLoading = false
             if let error = error {
                 ErrorHandlerCenter.handleError(error, sender: self)
             } else if let punishments = punishments {
                 self.punishments = punishments
                 self.tableView.reloadData()
             }
+            self.storeHouseRefreshControl?.finishingLoading()
         }
     }
 
@@ -54,7 +79,7 @@ class MineMainTableViewController: UITableViewController {
         let cell = UITableViewCell(style: .Subtitle, reuseIdentifier: "subtitle")
         if let punishment = self.getPuninshmentAtIndexPath(indexPath) {
             cell.textLabel! <- punishment.meeting.name
-            cell.detailTextLabel! <- "出血￥\(punishment.count)"
+            cell.detailTextLabel! <- "出血￥\(punishment.total)"
             if punishment.isImplemented {
                 cell.accessoryType = .Checkmark
             } else {
@@ -64,24 +89,21 @@ class MineMainTableViewController: UITableViewController {
         return cell
     }
     
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        self.storeHouseRefreshControl?.scrollViewDidScroll()
+    }
+    
+    override func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        self.storeHouseRefreshControl?.scrollViewDidEndDragging()
+    }
+}
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
+extension MineMainTableViewController {
+    override func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+        return NSAttributedString(string: self.isLoading ? "Loading……" : "竟然没迟到过, 不考虑让人生完整一下吗😃")
+    }
+    
+    override func emptyDataSetShouldAllowScroll(scrollView: UIScrollView!) -> Bool {
         return true
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
 }

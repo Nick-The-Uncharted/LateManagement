@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
@@ -21,8 +22,13 @@
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pCQ-RI-dBR">
-                        <rect key="frame" x="297" y="22" width="30" height="30"/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pCQ-RI-dBR" customClass="FabButton" customModule="Material">
+                        <rect key="frame" x="281" y="14" width="46" height="46"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="pCQ-RI-dBR" secondAttribute="height" multiplier="1:1" id="FCR-u7-cBT"/>
+                            <constraint firstAttribute="width" constant="46" id="ug8-fX-ij1"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <state key="normal" title="消费"/>
                         <connections>
                             <action selector="consumeButtonTouched:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="e3J-JI-sso"/>

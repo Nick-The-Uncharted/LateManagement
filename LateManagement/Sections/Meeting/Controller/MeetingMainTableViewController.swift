@@ -7,31 +7,84 @@
 //
 
 import UIKit
+import CBStoreHouseRefreshControl
+import SwiftMoment
+import DZNEmptyDataSet
 
-class MeetingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class MeetingMainTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     var meetings = [Meeting]()
+    var notFilteredMeetings = [Meeting]()
+    var storeHouseRefreshControl: CBStoreHouseRefreshControl?
+    var isLoading = false {
+        didSet {
+            self.tableView.reloadEmptyDataSet()
+        }
+    }
+    @IBOutlet weak var dateSegment: UISegmentedControl!
+    
+    @IBAction func dateSegmentValueChanged(sender: UISegmentedControl) {
+        self.updateMeetingBySegmentValue()
+    }
+    
+    func isSameDay(lhs: Moment, rhs: Moment) -> Bool {
+        return lhs.year == rhs.year && lhs.month == rhs.month && lhs.day == rhs.day
+    }
+    
+    func updateMeetingBySegmentValue() {
+        switch dateSegment.selectedSegmentIndex {
+        case 0:
+            meetings = notFilteredMeetings.filter{meeting in self.isSameDay(meeting.startTime, rhs: moment())}
+        case 1:
+            meetings = notFilteredMeetings.filter{meeting in self.isSameDay(meeting.startTime, rhs: moment() + 1.days)}
+        case 2:
+            meetings = notFilteredMeetings.filter{meeting in self.isSameDay(meeting.startTime, rhs: moment() + 2.days)}
+        default:
+            break
+        }
+        self.tableView.reloadData()
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.tableView.registerReusableCell(MeetingTableViewCell.self)
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 80
         
-        self.getMeetings()
+        self.storeHouseRefreshControl = CBStoreHouseRefreshControl.attachToScrollView(self.tableView, target: self, refreshAction: #selector(MeetingMainTableViewController.getMeetings), plist: "storehouse", color: UIColor.blackColor(), lineWidth: 2.0, dropHeight: 60, scale: 1, horizontalRandomness: 150, reverseLoadingAnimation: false, internalAnimationFactor: 0.5)
+        
+        self.tableView.tableFooterView = UIView(frame: .zero)
+        
+        self.tableView.emptyDataSetSource = self
+        self.tableView.emptyDataSetDelegate = self
     }
 
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+//        self.navigationController?.pushViewController(MeetingDetailTableViewController(), animated: true)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.getMeetings()
+    }
+    
     // MARK: - Table view data source
     
-    func getMeetings() {
+    @objc func getMeetings() {
+        self.isLoading = true
         Meeting.getMeetings {
             meetings, error in
+            self.isLoading = false
+            self.storeHouseRefreshControl?.finishingLoading()
             if let error = error {
                 ErrorHandlerCenter.handleError(error, sender: self)
             } else if let meetings = meetings {
-                self.meetings = meetings
-                self.tableView.reloadData()
+                self.notFilteredMeetings = meetings
+                self.updateMeetingBySegmentValue()
             }
         }
     }
@@ -53,57 +106,39 @@ class MeetingViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(indexPath: indexPath) as MeetingTableViewCell
         if let meeting = meetingAtIndexPath(indexPath) {
-            cell.nameLabel <- meeting.name
-            cell.timeAndPlaceLabel <- "\(meeting.startTime.hour):\(meeting.startTime.minute) ~ \(meeting.endTime.hour):\(meeting.endTime.minute)"
-            cell.punishmentLabel <- meeting.punishmentRule.descrption
+            cell.udpateWithMeeting(meeting)
         }
 
         return cell
     }
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        guard let meeting = meetingAtIndexPath(indexPath) else {return}
+        self.performSegueWithIdentifier("showMeetingDetail", sender: meeting)
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if let meetingDetailVC = segue.destinationViewController as? MeetingDetailTableViewController, meeting = sender as? Meeting {
+            meetingDetailVC.meeting = meeting
+        }
     }
-    */
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        self.storeHouseRefreshControl?.scrollViewDidScroll()
+    }
+    
+    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        self.storeHouseRefreshControl?.scrollViewDidEndDragging()
+    }
+}
 
+extension MeetingMainTableViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
+    func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+        return NSAttributedString(string: self.isLoading ? "Loading……" : "没有会议哦~")
+    }
+    
+    func emptyDataSetShouldAllowScroll(scrollView: UIScrollView!) -> Bool {
+        return true
+    }
+    
 }

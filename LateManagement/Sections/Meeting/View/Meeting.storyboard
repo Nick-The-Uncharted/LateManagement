@@ -5,11 +5,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
-        <!--Meeting View Controller-->
+        <!--Meeting Main Table View Controller-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="9pv-A4-QxB" customClass="MeetingViewController" customModule="LateManagement" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="9pv-A4-QxB" customClass="MeetingMainTableViewController" customModule="LateManagement" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Ia1-K6-d13"/>
                         <viewControllerLayoutGuide type="bottom" id="4ug-Mw-9AY"/>
@@ -19,33 +18,38 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="aqd-Jx-Pb0">
-                                <rect key="frame" x="0.0" y="108" width="600" height="443"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" red="0.15101002156734467" green="0.56891876459121704" blue="0.43715286254882812" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <outlet property="dataSource" destination="9pv-A4-QxB" id="eMS-az-tsF"/>
                                     <outlet property="delegate" destination="9pv-A4-QxB" id="OcT-bG-Gly"/>
                                 </connections>
                             </tableView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="3rk-Tg-P5W">
-                                <rect key="frame" x="239" y="72" width="122" height="29"/>
-                                <segments>
-                                    <segment title="今天"/>
-                                    <segment title="明天"/>
-                                    <segment title="后天"/>
-                                </segments>
-                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="3rk-Tg-P5W" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="Fqs-uA-0if"/>
+                            <constraint firstItem="aqd-Jx-Pb0" firstAttribute="top" secondItem="Ia1-K6-d13" secondAttribute="bottom" id="128-5p-HDg"/>
                             <constraint firstAttribute="trailing" secondItem="aqd-Jx-Pb0" secondAttribute="trailing" id="NaB-7u-cjJ"/>
                             <constraint firstItem="4ug-Mw-9AY" firstAttribute="top" secondItem="aqd-Jx-Pb0" secondAttribute="bottom" id="Nlh-z4-i9Y"/>
                             <constraint firstItem="aqd-Jx-Pb0" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="Qn2-r5-3qa"/>
-                            <constraint firstItem="aqd-Jx-Pb0" firstAttribute="top" secondItem="3rk-Tg-P5W" secondAttribute="bottom" constant="8" id="SKV-XS-7Lu"/>
-                            <constraint firstItem="3rk-Tg-P5W" firstAttribute="top" secondItem="Ia1-K6-d13" secondAttribute="bottom" constant="8" id="zhF-mA-VKu"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="xmF-D9-g38">
+                        <nil key="title"/>
+                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="3rk-Tg-P5W">
+                            <rect key="frame" x="192" y="8" width="216" height="29"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <segments>
+                                <segment title="今天"/>
+                                <segment title="明天"/>
+                                <segment title="后天"/>
+                            </segments>
+                            <color key="tintColor" red="0.29085952043533325" green="0.20994566380977631" blue="0.14615128934383392" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="dateSegmentValueChanged:" destination="9pv-A4-QxB" eventType="valueChanged" id="8Q7-L0-HyE"/>
+                            </connections>
+                        </segmentedControl>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Rvq-hH-v6P">
                             <connections>
                                 <segue destination="ETo-4P-cFR" kind="show" id="HSt-tr-pGK"/>
@@ -55,13 +59,41 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="dateSegment" destination="3rk-Tg-P5W" id="cId-GD-AeO"/>
                         <outlet property="tableView" destination="aqd-Jx-Pb0" id="xO0-zy-RXd"/>
+                        <segue destination="dfW-is-uL0" kind="show" identifier="showMeetingDetail" id="JZM-Oq-Y0c"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1592" y="-696"/>
         </scene>
-        <!--Title-->
+        <!--会议详情-->
+        <scene sceneID="oBM-F6-0EI">
+            <objects>
+                <tableViewController id="dfW-is-uL0" customClass="MeetingDetailTableViewController" customModule="LateManagement" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="aX1-j5-QnG">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <outlet property="dataSource" destination="dfW-is-uL0" id="btT-X3-ldm"/>
+                            <outlet property="delegate" destination="dfW-is-uL0" id="0QU-Ep-CnD"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="会议详情" id="7r5-X7-nN3">
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="3zW-YE-XDQ">
+                            <connections>
+                                <action selector="doneButtonTouched:" destination="dfW-is-uL0" id="CY6-OM-ABJ"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KAE-RL-emD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2318" y="-696"/>
+        </scene>
+        <!--新建会议-->
         <scene sceneID="SOr-fx-qkK">
             <objects>
                 <viewController id="ETo-4P-cFR" customClass="NewMeetingTableViewController" customModule="LateManagement" customModuleProvider="target" sceneMemberID="viewController">
@@ -74,7 +106,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Title" id="bHX-lS-6Ef">
+                    <navigationItem key="navigationItem" title="新建会议" id="bHX-lS-6Ef">
                         <barButtonItem key="rightBarButtonItem" title="下一步" id="BHm-Ob-Zob">
                             <connections>
                                 <segue destination="Law-nx-GIb" kind="show" id="jbk-m4-QWQ"/>
@@ -84,9 +116,9 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="A8P-HG-OaI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2289" y="-696"/>
+            <point key="canvasLocation" x="2256" y="-1390"/>
         </scene>
-        <!--Search User Table View Controller-->
+        <!--添加与会人员-->
         <scene sceneID="uem-Uv-Y1C">
             <objects>
                 <tableViewController id="Law-nx-GIb" customClass="SearchUserTableViewController" customModule="LateManagement" customModuleProvider="target" sceneMemberID="viewController">
@@ -99,10 +131,17 @@
                             <outlet property="delegate" destination="Law-nx-GIb" id="Car-BY-XyQ"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="添加与会人员" id="7Xo-Ev-mXI">
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="8xN-aF-Wn2">
+                            <connections>
+                                <action selector="doneButtonTouched:" destination="Law-nx-GIb" id="WnJ-db-Qyh"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Dz-S9-tMy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2936" y="-696"/>
+            <point key="canvasLocation" x="2993" y="-1390"/>
         </scene>
     </scenes>
 </document>

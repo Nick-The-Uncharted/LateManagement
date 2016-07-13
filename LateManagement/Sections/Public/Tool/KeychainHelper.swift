@@ -21,9 +21,9 @@ class KeychainHelper {
         }
     }
     
-    static func setPassword(userId: String, password: String) {
+    static func setPassword(email: String, password: String) {
         let keychain = Keychain(service: "com.baixing.nick.password")
             .accessibility(.AfterFirstUnlock)
-        keychain[userId] = password
+        keychain[email] = password
     }
 }

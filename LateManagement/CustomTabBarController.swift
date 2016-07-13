@@ -12,18 +12,12 @@ class CustomTabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tabBar.tintColor = ColorScheme.defaultScheme.highLightColor
         
-        dispatch_async(dispatch_get_main_queue()) {
-//            self.requestSetup()
-        }
     }
     
-    func requestSetup() {
-        let loginStoryboard = UIStoryboard(name: "LoginStoryboard", bundle: nil)
-        if let loginViewController = loginStoryboard.instantiateInitialViewController() {
-            self.presentViewController(loginViewController, animated: true, completion: nil)
-        }
-        
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
     }
     
     static func becomeRootViewController() {

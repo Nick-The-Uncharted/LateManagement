@@ -10,7 +10,12 @@ import Foundation
 import UIKit
 
 class ErrorHandlerCenter {
-    static func handleError(error: MyError, sender: UIViewController) {
-        
+    static func handleError(error: MyError, sender: UIViewController? = nil) {
+        switch error {
+        case .WrongPassword:
+            LoadingAnimation.showAndDismiss("密码错误")
+        default:
+            LoadingAnimation.showAndDismiss("出现未知错误")
+        }
     }
 }

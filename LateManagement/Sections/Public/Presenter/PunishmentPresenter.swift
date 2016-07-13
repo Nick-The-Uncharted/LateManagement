@@ -18,6 +18,6 @@ extension Punishment: AvatarPresentable, TitlePresentable, ContentPresentable {
     }
     
     var content: String {
-        return "￥\(self.count)"
+        return "￥\(self.total)"
     }
 }

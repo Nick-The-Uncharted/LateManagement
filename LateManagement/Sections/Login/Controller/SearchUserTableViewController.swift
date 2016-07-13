@@ -10,9 +10,12 @@ import Foundation
 import UIKit
 
 class SearchUserTableViewController: SearchTableViewController {
+    var dismissCallback: ([User] -> Void)?
+    
     // MARK: Outlet
     @IBAction func doneButtonTouched(sender: UIBarButtonItem) {
         CustomTabBarController.becomeRootViewController()
+        dismissCallback?(self.selelctedPresenters.flatMap{$0 as? User})
     }
  
     override func getInitailData(completionHandler: SimpleBlock? = nil) {

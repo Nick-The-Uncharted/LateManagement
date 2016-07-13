@@ -7,24 +7,37 @@
 //
 
 import UIKit
+import Eureka
 
-class ConsumeTableViewController: UITableViewController {
-    @IBOutlet weak var nameTextInput: UITextField!
-    @IBOutlet weak var cntTextInput: UITextField!
-
+class ConsumeTableViewController: FormViewController {
+    var dismissCallBack: ((String, Int) -> Void)?
+    
+    // MARK: Actions
+    
+    @IBAction func cancelButtonTouched(sender: UIBarButtonItem) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    @IBAction func doneButtonTouched(sender: UIBarButtonItem) {
+        let values = self.form.values()
+        if let name = values["name"] as? String,
+            amount = values["amount"] as? Int {
+            dismissCallBack?(name, amount)
+        }
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        self.form +++ Section()
+            <<< TextRow("name") {
+                row in
+                row.title = "事项"
+            }
+            <<< IntRow("amount") {
+                row in
+                row.title = "金额"
+        }
     }
 
     // MARK: - Table view data source

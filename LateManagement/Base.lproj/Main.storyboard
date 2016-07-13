@@ -10,7 +10,7 @@
         <scene sceneID="GCL-W9-bY4">
             <objects>
                 <navigationController id="Pyj-ct-RfJ" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="团队" id="M79-Dv-N6u"/>
+                    <tabBarItem key="tabBarItem" title="团队" image="Team" id="M79-Dv-N6u"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="dct-l8-fMS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -23,7 +23,7 @@
             </objects>
             <point key="canvasLocation" x="780" y="0.0"/>
         </scene>
-        <!--Title-->
+        <!--我-->
         <scene sceneID="2EW-oT-YEA">
             <objects>
                 <tableViewController id="ygd-pG-xTt" customClass="MineMainTableViewController" customModule="LateManagement" customModuleProvider="target" sceneMemberID="viewController">
@@ -35,12 +35,17 @@
                             <rect key="frame" x="0.0" y="64" width="600" height="193"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zHC-fR-6CN">
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zHC-fR-6CN">
                                     <rect key="frame" x="230" y="27" width="140" height="140"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="zHC-fR-6CN" secondAttribute="height" multiplier="1:1" id="GRc-qP-hOE"/>
                                         <constraint firstAttribute="width" constant="140" id="QCK-NJ-HHa"/>
                                     </constraints>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                            <integer key="value" value="70"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
                                 </imageView>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -55,7 +60,13 @@
                             <outlet property="delegate" destination="ygd-pG-xTt" id="MaW-Jy-fKf"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Title" id="wnG-AE-OnC"/>
+                    <navigationItem key="navigationItem" title="我" id="wnG-AE-OnC">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="giV-8O-NSe">
+                            <connections>
+                                <segue destination="0ao-Id-bHw" kind="presentation" id="M3D-X9-yKp"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="avatarImageView" destination="zHC-fR-6CN" id="MHO-KX-VwN"/>
                     </connections>
@@ -64,11 +75,19 @@
             </objects>
             <point key="canvasLocation" x="1600" y="773"/>
         </scene>
+        <!--AddTeamViewController-->
+        <scene sceneID="EnN-2A-jjf">
+            <objects>
+                <viewControllerPlaceholder storyboardName="LoginStoryboard" referencedIdentifier="AddTeamViewController" id="0ao-Id-bHw" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2VI-Qr-mm9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2110.5" y="773"/>
+        </scene>
         <!--我-->
         <scene sceneID="OwP-GJ-IzU">
             <objects>
                 <navigationController id="cO8-qn-AW4" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="我" id="gAB-8P-pZH"/>
+                    <tabBarItem key="tabBarItem" title="我" image="Mine" id="gAB-8P-pZH"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="1ik-Hd-i7U">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -111,11 +130,11 @@
             </objects>
             <point key="canvasLocation" x="1600" y="0.0"/>
         </scene>
-        <!--First-->
+        <!--会议-->
         <scene sceneID="hcK-Db-6RL">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="QfZ-eL-e2I" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="First" image="first" id="acW-dT-cKf"/>
+                    <tabBarItem key="tabBarItem" title="会议" image="Meeting" id="acW-dT-cKf"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="X0J-jB-k8X">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -142,6 +161,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="first" width="30" height="30"/>
+        <image name="Meeting" width="24" height="24"/>
+        <image name="Mine" width="24" height="24"/>
+        <image name="Team" width="24" height="24"/>
     </resources>
 </document>

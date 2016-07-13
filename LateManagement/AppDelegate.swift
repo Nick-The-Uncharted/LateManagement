@@ -12,11 +12,37 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    func showLoginVC() {
+        let loginStoryboard = UIStoryboard(name: "LoginStoryboard", bundle: nil)
+        if let loginViewController = loginStoryboard.instantiateInitialViewController() {
+            self.window?.rootViewController = loginViewController
+        }
+        
+    }
 
+    func requestLogin() {
+        User.tryLogin {
+            user, error in
+            if let error = error {
+                ErrorHandlerCenter.handleError(error)
+                self.showLoginVC()
+            } else if let user = user {
+                User.loginUser = user
+                if user.teams.isEmpty {
+                    let storyboard = UIStoryboard(name: "LoginStoryboard", bundle: nil)
+                    let addTeamVC = storyboard.instantiateViewControllerWithIdentifier("AddTeamViewController")
+                    self.window?.rootViewController = addTeamVC
+                }
+            }
+        }
+    }
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
+        ColorScheme.defaultScheme.updateGlobalSchema()
+        self.requestLogin()
         return true
     }
 

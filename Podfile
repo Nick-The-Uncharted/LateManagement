@@ -17,4 +17,8 @@ target 'LateManagement' do
   pod 'KeychainAccess'
   pod 'JVFloatLabeledTextField'
   pod 'Eureka'
+  pod "TPKeyboardAvoiding"
+  pod 'ChameleonFramework/Swift'
+  pod "PKHUD"
+  pod "CBStoreHouseRefreshControl", :git => 'https://github.com/Nick-The-Uncharted/CBStoreHouseRefreshControl.git'
 end
