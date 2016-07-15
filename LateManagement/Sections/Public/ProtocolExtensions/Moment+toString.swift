@@ -10,7 +10,7 @@ import Foundation
 import SwiftMoment
 
 extension Moment {
-    func toString(dateFormat: String = "yyyy-MM-dd'T'HH:mm:ssZZZZZ") -> String{
+    func toString(dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss'Z'") -> String{
         let formatter = NSDateFormatter()
         formatter.dateFormat = dateFormat
         return formatter.stringFromDate(self.date)

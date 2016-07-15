@@ -47,11 +47,7 @@ class Team: JSONInitialable {
     }
     
     func getLates(start: Int = 0, end: Int = -1, completionHandler: (([Punishment]?, MyError?) -> Void)) {
-        var lates = [Punishment]()
-        for _ in 0 ... 10 {
-            lates.append(Punishment())
-        }
-        completionHandler(lates, nil)
+        TeamAPI.getLates(self.id, completionHandler: completionHandler)
     }
     
     func getPunishmentSum(completionHandler: (Int?, MyError?) -> Void) {
@@ -62,7 +58,19 @@ class Team: JSONInitialable {
         TeamAPI.consume(self.id, name: name, amount: amount, completionHandler: completionHandler)
     }
     
+    func getConsumeRecords(completionHandler: ([ConsumeRecord]?, MyError?) -> Void) {
+        TeamAPI.getConsumeRecords(self.id, completionHandler: completionHandler)
+    }
+    
     func enroll(completionHandler: (SimpleResponseResult?, MyError?) -> Void) {
         TeamAPI.enroll(self.id, completionHandler: completionHandler)
+    }
+    
+    func implementPunishment(lateId: String, completionHandler: (SimpleResponseResult?, MyError?) -> Void) {
+        TeamAPI.implementPunishment(lateId, completionHandler: completionHandler)
+    }
+    
+    func getTopPunishemnt(completionHandler: (TopPunishment?, MyError?) -> Void) {
+        TeamAPI.getTopPunishemnt(self.id, completionHandler: completionHandler)
     }
 }

@@ -10,6 +10,7 @@ import Foundation
 import SwiftyJSON
 
 class Punishment: JSONInitialable {
+    var id: String
     var user: User
     var total: Int
     var meeting: Meeting
@@ -17,6 +18,7 @@ class Punishment: JSONInitialable {
     var duation: Int
     
     init() {
+        self.id = "id"
         self.user = User()
         self.total = 2333
         self.duation = 10
@@ -25,10 +27,11 @@ class Punishment: JSONInitialable {
     }
     
     required init?(json: JSON) {
+        self.id = json["id"].stringValue
         self.user = User(json: json["user"]) ?? User()
-        self.duation = json["duraiton"].intValue
+        self.duation = json["duration"].intValue
         self.total = json["total"].intValue
         self.meeting = Meeting(json: json["meeting"]) ?? Meeting()
-        self.isImplemented = json["state"].boolValue
+        self.isImplemented = json["state"].string != "created"
     }
 }

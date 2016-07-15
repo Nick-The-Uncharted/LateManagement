@@ -17,9 +17,9 @@ class LoadingAnimation {
         PKHUD.sharedHUD.show()
     }
     
-    static func showAndDismiss(text: String) {
+    static func showAndDismiss(text: String, delay: Double = 0.5) {
         LoadingAnimation.show(text)
-        PKHUD.sharedHUD.hide(afterDelay: 0.5) {
+        PKHUD.sharedHUD.hide(afterDelay: delay) {
             _ in
             self.showCnt -= 1
         }
@@ -27,8 +27,8 @@ class LoadingAnimation {
     
     static func dismiss() {
         showCnt -= 1
-        if showCnt == 0 {
+//        if showCnt == 0 {
             PKHUD.sharedHUD.hide(animated: true, completion: nil)
-        }
+//        }
     }
 }

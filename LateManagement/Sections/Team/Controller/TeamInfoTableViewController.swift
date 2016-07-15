@@ -15,11 +15,16 @@ class TeamInfoTableViewController: UITableViewController {
     
     // MARK: - Actions
     @IBAction func doneButtonTouched(sender: UIBarButtonItem) {
-        // MARK: Outlet
-        self.team?.enroll {
+        guard let team = self.team else {return}
+        team.enroll {
             _, error in
             if let error = error {
                 ErrorHandlerCenter.handleError(error, sender: self)
+            } else {
+                if !(User.loginUser?.teams.isEmpty ?? true) {
+                    User.loginUser?.teams[(User.loginUser?.teams.count ?? 1) - 1] = team
+                }
+                log.info("enroll team \(self.team?.name) success")
             }
         }
         CustomTabBarController.becomeRootViewController()
@@ -67,17 +72,20 @@ class TeamInfoTableViewController: UITableViewController {
                 let cell = UITableViewCell(style: .Value1, reuseIdentifier: "rightDetail")
                 cell.textLabel! <- "队名"
                 cell.detailTextLabel! <- team.name
+                cell.selectionStyle = .None
                 return cell
             case 1:
                 let cell = UITableViewCell(style: .Value1, reuseIdentifier: "rightDetail")
                 cell.textLabel! <- "manager"
                 cell.detailTextLabel! <- team.manager.name ?? "暂无"
+                cell.selectionStyle = .None
                 return cell
             default:
                 let cell = self.tableView.dequeueReusableCell() as TableViewCell1
                 if let member = self.memberAtIndexPath(indexPath) {
                     cell.updateWithPresenter(member)
                 }
+                cell.selectionStyle = .None
                 return cell
             }
         } else {

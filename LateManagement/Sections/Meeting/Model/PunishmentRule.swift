@@ -9,17 +9,36 @@
 import Foundation
 import SwiftyJSON
 
-class PunishmentRule: JSONInitialable {
-    var name: String
-    var descrption: String
+enum PunishmentRule: JSONInitialable {
+    case UserDefined(String)
+    case Linear(Int)
+    case Same(Int)
     
-    required init?(json: JSON) {
-        self.name = json["name"].stringProperty
-        self.descrption = json["desc"].stringProperty
+    var descrption: String {
+        switch self {
+        case let .UserDefined(userDesc):
+            return userDesc
+        case let .Linear(unitPrice):
+            return "迟到罚\(unitPrice)元/分钟"
+        case let .Same(price):
+            return "一迟到就罚\(price)元"
+        }
+    }
+    
+    init?(json: JSON) {
+        let type = json["type"]
+        if type == "userdefined" {
+            self = .UserDefined(json["desc"].stringValue)
+        } else if type == "linear" {
+            self = .Linear(json["unitPrice"].intValue)
+        } else if type == "same" {
+            self = .Same(json["price"].intValue)
+        } else {
+            return nil
+        }
     }
     
     init() {
-        self.name = "ruleName"
-        self.descrption = "ruleDesc"
+        self = .Linear(5)
     }
 }

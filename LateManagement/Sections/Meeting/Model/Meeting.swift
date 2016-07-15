@@ -20,6 +20,7 @@ class Meeting: JSONInitialable {
     var team: Team
 
     required init?(json: JSON) {
+        if json.type != .Dictionary {return nil}
         self.id = json["id"].stringProperty
         self.name = json["name"].stringProperty
         self.location = json["location"].stringProperty
@@ -39,8 +40,8 @@ class Meeting: JSONInitialable {
         self.team = Team()
     }
     
-    func getMembers(completionHandler: ([User]?, MyError?) -> Void) {
-        MeetingAPI.getMembers(self.id, completionHandler: completionHandler)
+    func getMemberLates(completionHandler: ([Late]?, MyError?) -> Void) {
+        MeetingAPI.getMemberLates(self.id, completionHandler: completionHandler)
     }
     
     func setLates(lates: [Late], completionHandler: (SimpleResponseResult?, MyError?) -> Void) {
@@ -51,8 +52,8 @@ class Meeting: JSONInitialable {
         MeetingAPI.getMeetings(completionHandler)
     }
     
-    static func new(name: String, location: String, startTime: Moment, endTime: Moment, teamId: String, completionHandler: (Meeting?, MyError?) -> Void) {
-        MeetingAPI.new(name, location: location, startTime: startTime, endTime: endTime, teamId: teamId, completionHandler: completionHandler)
+    static func new(name: String, location: String, startTime: Moment, endTime: Moment, teamId: String, punishmentType: String, punishmentComment: String, extraName: String, extra: AnyObject, completionHandler: (Meeting?, MyError?) -> Void) {
+        MeetingAPI.new(name, location: location, startTime: startTime, endTime: endTime, teamId: teamId, punishmentType: punishmentType, punishmentComment: punishmentComment, extraName: extraName, extra: extra, completionHandler: completionHandler)
     }
     
     func addMembers(memberIds: [String], completionHandler: (SimpleResponseResult?, MyError?) -> Void) {

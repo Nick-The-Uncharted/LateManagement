@@ -32,6 +32,7 @@ class NewTeamInfoTableViewController: UITableViewController {
             searchUserVC.dismissCallback = {
                 [unowned self]
                 users in
+                CustomTabBarController.becomeRootViewController()
                 if let user = User.loginUser {
                     LoadingAnimation.show("创建中……")
                     var memeberIds = users.map{$0.id}
@@ -41,6 +42,9 @@ class NewTeamInfoTableViewController: UITableViewController {
                         if let error = error {
                             ErrorHandlerCenter.handleError(error, sender: self)
                         } else if let team = team {
+                            if User.loginUser?.teams.count > 0 {
+                                User.loginUser?.teams[(User.loginUser?.teams.count ?? 0) - 1] = team
+                            }
                             log.info("create team \(team.name) success")
                         }
                         LoadingAnimation.dismiss()

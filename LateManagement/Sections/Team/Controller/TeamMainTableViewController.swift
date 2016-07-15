@@ -30,10 +30,12 @@ class TeamMainTableViewController: UITableViewController {
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 80
      
-        self.storeHouseRefreshControl = CBStoreHouseRefreshControl.attachToScrollView(self.tableView, target: self, refreshAction: #selector(TeamMainTableViewController.getInitialLates), plist: "storehouse", color: UIColor.blackColor(), lineWidth: 2.0, dropHeight: 60, scale: 1, horizontalRandomness: 150, reverseLoadingAnimation: false, internalAnimationFactor: 0.5)
+        self.storeHouseRefreshControl = CBStoreHouseRefreshControl.attachToScrollView(self.tableView, target: self, refreshAction: #selector(TeamMainTableViewController.doRefresh), plist: "storehouse", color: UIColor.blackColor(), lineWidth: 2.0, dropHeight: 60, scale: 1, horizontalRandomness: 150, reverseLoadingAnimation: false, internalAnimationFactor: 0.5)
+//        self.tableView.addGestureRecognizer(UISwipeGestureRecognizer(target: self, action: #selector(TeamMainTableViewController.handleSwipeGesture(_:))))
 
         self.tableView.emptyDataSetSource = self
         self.tableView.emptyDataSetDelegate = self
+        self.tableView.tableFooterView = UIView(frame: .zero)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -48,13 +50,25 @@ class TeamMainTableViewController: UITableViewController {
         self.performSegueWithIdentifier("showConsume", sender: nil)
     }
     
+    @objc func handleSwipeGesture(gr: UISwipeGestureRecognizer) {
+        guard gr.direction == .Left || gr.direction == .Right else {
+            return
+        }
+        if let indexPath = self.tableView.indexPathForRowAtPoint(gr.locationInView(self.tableView)) {
+            self.punishments.removeAtIndex(indexPath.row)
+            self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: gr.direction == .Right ? .Right : .Left)
+        }
+    }
+    
     // MARK: - Table view data source
     
+    func doRefresh() {
+        self.getInitialLates()
+        self.getPunishmentSum()
+    }
+    
     func getPunishmentSum() {
-        if isFirstLoading {
-            LoadingAnimation.show()
-        }
-        User.loginUser?.teams.first?.getPunishmentSum {
+        User.loginUser?.teams.last?.getPunishmentSum {
             punishmentSum, error in
             if let error = error {
                 ErrorHandlerCenter.handleError(error, sender: self)
@@ -64,7 +78,6 @@ class TeamMainTableViewController: UITableViewController {
             }
             if self.isFirstLoading {
                 self.isFirstLoading = false
-                LoadingAnimation.dismiss()
             }
         }
     }
@@ -73,7 +86,7 @@ class TeamMainTableViewController: UITableViewController {
 //        LoadingAnimation.show()
         
         self.isLoading = true
-        User.loginUser?.teams.first?.getLates() {
+        User.loginUser?.teams.last?.getLates() {
             punishments, error in
             self.storeHouseRefreshControl?.finishingLoading()
             self.isLoading = false
@@ -108,7 +121,7 @@ class TeamMainTableViewController: UITableViewController {
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell() as MoneyPoolTableViewCell
             
-            cell.moneyCntLabel <- "\(self.punishmentSum) 大洋"
+            cell.moneyCntLabel <- "💰💰💰 \(self.punishmentSum) 大洋"
             cell.selectionStyle = .None
             cell.consumeButtonTouchedCallback = {
                 // 跳转到消费
@@ -125,9 +138,28 @@ class TeamMainTableViewController: UITableViewController {
                 button.titleLabel?.font = UIFont.systemFontOfSize(14)
                 button.setTitle("实施惩罚", forState: .Normal)
                 button.setTitleColor(.blackColor(), forState: .Normal)
+//                button.backgroundColor = UIColor.flatWatermelonColor()
+                button.layer.cornerRadius = 5
+                button.layer.borderWidth = 1
+                
                 button.sizeToFit()
+                button.frame.size = CGSize(width: button.frame.size.width + 20, height: button.frame.size.height)
                 button.closure = {
-                    print(punishment.content)
+                    let alert = UIAlertController(title: "下午茶好喝吗？", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+                    alert.addAction(UIAlertAction(title: "好喝", style: UIAlertActionStyle.Default) {
+                        alertAction in
+                            User.loginUser?.teams.last?.implementPunishment(punishment.id) {
+                                _, error in
+                                if let error = error {
+                                    ErrorHandlerCenter.handleError(error, sender: self)
+                                } else {
+                                    self.getInitialLates()
+                                }
+                            }
+                    })
+                    
+                    alert.addAction(UIAlertAction(title: "不好喝", style: .Cancel, handler: nil))
+                    self.presentViewController(alert, animated: true, completion: nil)
                 }
                 cell.selectionStyle = .None
                 cell.accessoryView = button
@@ -143,10 +175,12 @@ class TeamMainTableViewController: UITableViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let consumeController = sender?.sourceViewController as? ConsumeTableViewController {
+        if let consumeController = (segue.destinationViewController as? UINavigationController)?.topViewController as? ConsumeTableViewController {
+            consumeController.maxAmount = self.punishmentSum
             consumeController.dismissCallBack = {
                 name, amount in
-                if let team = User.loginUser?.teams.first {
+                self.getPunishmentSum()
+                if let team = User.loginUser?.teams.last {
                     team.consume(name, amount: amount) {
                         _, error in
                         if let error = error {
@@ -154,6 +188,12 @@ class TeamMainTableViewController: UITableViewController {
                         }
                     }
                 }
+            }
+        } else if let consumeRecordTableViewController = segue.destinationViewController as? ConsumeRecordTableViewController {
+            if let team = User.loginUser?.teams.last {
+                consumeRecordTableViewController.team = team
+            } else {
+                LoadingAnimation.showAndDismiss("孩纸 你没有队伍", delay: 1)
             }
         }
     }

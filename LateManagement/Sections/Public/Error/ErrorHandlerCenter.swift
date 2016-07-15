@@ -12,6 +12,8 @@ import UIKit
 class ErrorHandlerCenter {
     static func handleError(error: MyError, sender: UIViewController? = nil) {
         switch error {
+        case .NoEmail:
+            break
         case .WrongPassword:
             LoadingAnimation.showAndDismiss("密码错误")
         default:

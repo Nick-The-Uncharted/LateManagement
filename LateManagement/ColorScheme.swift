@@ -16,7 +16,7 @@ class ColorScheme {
     let secondaryColor = UIColor.flatWhiteColor()
     let postiveColor = UIColor.flatSkyBlueColor()
     let negativeColor = UIColor.flatWatermelonColor()
-    let highLightColor = UIColor.flatTealColor()
+    let highLightColor = UIColor.flatMintColorDark()
     
     func updateGlobalSchema() {
         UINavigationBar.appearance().barTintColor = self.primaryColor

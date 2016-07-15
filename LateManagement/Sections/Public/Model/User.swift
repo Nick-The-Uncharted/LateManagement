@@ -64,6 +64,7 @@ class User: JSONInitialable {
     
     static func tryLogin(completionHandler: (User?, MyError?) -> Void) {
         guard let email = NSUserDefaults.standardUserDefaults().stringForKey("lastLoginEmail") else {
+            log.info("no previous login")
             completionHandler(nil, .NoEmail)
             return
         }

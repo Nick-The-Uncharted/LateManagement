@@ -14,7 +14,6 @@ class SearchUserTableViewController: SearchTableViewController {
     
     // MARK: Outlet
     @IBAction func doneButtonTouched(sender: UIBarButtonItem) {
-        CustomTabBarController.becomeRootViewController()
         dismissCallback?(self.selelctedPresenters.flatMap{$0 as? User})
     }
  

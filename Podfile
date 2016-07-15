@@ -21,4 +21,7 @@ target 'LateManagement' do
   pod 'ChameleonFramework/Swift'
   pod "PKHUD"
   pod "CBStoreHouseRefreshControl", :git => 'https://github.com/Nick-The-Uncharted/CBStoreHouseRefreshControl.git'
+  pod 'TransitionTreasury'
+  pod 'TransitionAnimation'
+  pod 'LTMorphingLabel'
 end

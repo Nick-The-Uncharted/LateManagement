@@ -3,8 +3,86 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
+        <!--Consume Record Table View Controller-->
+        <scene sceneID="37w-uA-ggl">
+            <objects>
+                <tableViewController id="U29-j8-ONM" customClass="ConsumeRecordTableViewController" customModule="LateManagement" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="QGb-rs-7Of">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <outlet property="dataSource" destination="U29-j8-ONM" id="OCk-b7-7Hv"/>
+                            <outlet property="delegate" destination="U29-j8-ONM" id="7zc-sy-zlQ"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LlV-xe-tg4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="941" y="0.0"/>
+        </scene>
+        <!--请客大王-->
+        <scene sceneID="hys-lx-niJ">
+            <objects>
+                <viewController id="gia-WI-gUf" customClass="TopPunishmentViewController" customModule="LateManagement" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="IFO-D7-Nmo"/>
+                        <viewControllerLayoutGuide type="bottom" id="hD0-wZ-Uxv"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="skX-bA-hXG">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="罚款数" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j1d-sF-f1e">
+                                <rect key="frame" x="275" y="464" width="51" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nLr-Ug-xOV">
+                                <rect key="frame" x="200" y="96" width="200" height="200"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="nLr-Ug-xOV" secondAttribute="height" multiplier="1:1" id="6By-dG-bHF"/>
+                                    <constraint firstAttribute="width" constant="200" id="K7b-cN-4yX"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="100"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="冤大头" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GDb-qm-aUY" customClass="LTMorphingLabel" customModule="LTMorphingLabel">
+                                <rect key="frame" x="240" y="316" width="120" height="48"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="GDb-qm-aUY" firstAttribute="top" secondItem="nLr-Ug-xOV" secondAttribute="bottom" constant="20" id="U90-P2-9wz"/>
+                            <constraint firstItem="nLr-Ug-xOV" firstAttribute="centerX" secondItem="skX-bA-hXG" secondAttribute="centerX" id="a5o-C7-5o7"/>
+                            <constraint firstItem="j1d-sF-f1e" firstAttribute="top" secondItem="GDb-qm-aUY" secondAttribute="bottom" constant="100" id="doZ-F1-KZu"/>
+                            <constraint firstItem="nLr-Ug-xOV" firstAttribute="top" secondItem="IFO-D7-Nmo" secondAttribute="bottom" constant="32" id="dr4-qL-ojR"/>
+                            <constraint firstItem="GDb-qm-aUY" firstAttribute="centerX" secondItem="j1d-sF-f1e" secondAttribute="centerX" id="q1T-8a-QjV"/>
+                            <constraint firstItem="j1d-sF-f1e" firstAttribute="centerX" secondItem="skX-bA-hXG" secondAttribute="centerX" id="t4O-FL-3yQ"/>
+                            <constraint firstItem="GDb-qm-aUY" firstAttribute="centerX" secondItem="nLr-Ug-xOV" secondAttribute="centerX" id="vFD-Rl-A6a"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="请客大王" id="yVc-fV-Esv"/>
+                    <connections>
+                        <outlet property="avatarImageView" destination="nLr-Ug-xOV" id="26d-h2-reX"/>
+                        <outlet property="cntLabel" destination="j1d-sF-f1e" id="0u1-BA-oiq"/>
+                        <outlet property="nameLabel" destination="GDb-qm-aUY" id="ztE-o4-XXB"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4KO-vR-K3P" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1600" y="-759"/>
+        </scene>
         <!--队伍概览-->
         <scene sceneID="qKB-1d-Pbs">
             <objects>
@@ -20,8 +98,16 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="队伍概览" id="Fck-CJ-FBm">
-                        <barButtonItem key="leftBarButtonItem" title="消费记录" id="eFV-bm-61n"/>
-                        <barButtonItem key="rightBarButtonItem" title="榜单" id="I9H-oU-vtt"/>
+                        <barButtonItem key="leftBarButtonItem" title="消费记录" id="eFV-bm-61n">
+                            <connections>
+                                <segue destination="U29-j8-ONM" kind="show" id="BVf-TM-z6h"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="榜单" id="I9H-oU-vtt">
+                            <connections>
+                                <segue destination="gia-WI-gUf" kind="show" id="ZWC-WK-5Mu"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>

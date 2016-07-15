@@ -19,6 +19,10 @@ class TeamAPI {
             ]).responseMyObject(completionHandler)
     }
     
+    static func getLates(teamId: String, completionHandler: (([Punishment]?, MyError?) -> Void)) {
+        Alamofire.request(.GET, "\(baseUrl)late/\(teamId)/created").responseMyArray(completionHandler)
+    }
+    
     static func addMembers(teamId: String, memberIds: [String], completionHandler: (SimpleResponseResult?, MyError?) -> Void) {
         Alamofire.request(.POST, "\(baseUrl)\(teamModule)addMembers", parameters: [
                 "teamId": teamId,
@@ -49,7 +53,15 @@ class TeamAPI {
     }
     
     static func consume(teamId: String, name: String, amount: Int, completionHandler: (SimpleResponseResult?, MyError?) -> Void) {
-        
+        Alamofire.request(.POST, "\(baseUrl)consume/spend", parameters: [
+                "desc": name,
+                "total": amount,
+                "teamId": teamId
+            ]).responseMyObject(completionHandler)
+    }
+    
+    static func getConsumeRecords(teamId: String, completionHandler: ([ConsumeRecord]?, MyError?) -> Void) {
+        Alamofire.request(.GET, "\(baseUrl)consume/record", parameters: ["teamId": teamId]).responseMyArray(completionHandler)
     }
     
     static func getAllTeams(completionHandler: ([Team]?, MyError?) -> Void) {
@@ -58,5 +70,13 @@ class TeamAPI {
     
     static func enroll(teamId: String, completionHandler: (SimpleResponseResult?, MyError?) -> Void) {
         Alamofire.request(.POST, "\(baseUrl)\(teamModule)enroll", parameters: ["teamId": teamId]).responseMyObject(completionHandler)
+    }
+    
+    static func implementPunishment(lateId: String, completionHandler: (SimpleResponseResult?, MyError?) -> Void) {
+        Alamofire.request(.POST, "\(baseUrl)late/\(lateId)/changeState").responseMyObject(completionHandler)
+    }
+    
+    static func getTopPunishemnt(teamId: String, completionHandler: (TopPunishment?, MyError?) -> Void) {
+        Alamofire.request(.POST, "\(baseUrl)late/latest", parameters: ["teamId": teamId]).responseMyObject(completionHandler)
     }
 }

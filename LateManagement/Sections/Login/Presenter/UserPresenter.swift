@@ -20,6 +20,6 @@ extension User: AvatarPresentable, TitlePresentable, ContentPresentable {
     }
     
     var content: String {
-        return self.teams.first?.name ?? "no content"
+        return self.teams.last?.name ?? "no content"
     }
 }

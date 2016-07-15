@@ -1,41 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="9pv-A4-QxB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="XY2-lL-ZkV">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
         <!--Meeting Main Table View Controller-->
-        <scene sceneID="hNz-n2-bh7">
+        <scene sceneID="cb1-I5-dGW">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="9pv-A4-QxB" customClass="MeetingMainTableViewController" customModule="LateManagement" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Ia1-K6-d13"/>
-                        <viewControllerLayoutGuide type="bottom" id="4ug-Mw-9AY"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="tsR-hK-woN">
+                <tableViewController id="XY2-lL-ZkV" customClass="MeetingMainTableViewController" customModule="LateManagement" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="SXa-6Q-43L">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="aqd-Jx-Pb0">
-                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <color key="tintColor" red="0.15101002156734467" green="0.56891876459121704" blue="0.43715286254882812" alpha="1" colorSpace="calibratedRGB"/>
-                                <connections>
-                                    <outlet property="dataSource" destination="9pv-A4-QxB" id="eMS-az-tsF"/>
-                                    <outlet property="delegate" destination="9pv-A4-QxB" id="OcT-bG-Gly"/>
-                                </connections>
-                            </tableView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="aqd-Jx-Pb0" firstAttribute="top" secondItem="Ia1-K6-d13" secondAttribute="bottom" id="128-5p-HDg"/>
-                            <constraint firstAttribute="trailing" secondItem="aqd-Jx-Pb0" secondAttribute="trailing" id="NaB-7u-cjJ"/>
-                            <constraint firstItem="4ug-Mw-9AY" firstAttribute="top" secondItem="aqd-Jx-Pb0" secondAttribute="bottom" id="Nlh-z4-i9Y"/>
-                            <constraint firstItem="aqd-Jx-Pb0" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="Qn2-r5-3qa"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="xmF-D9-g38">
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <outlet property="dataSource" destination="XY2-lL-ZkV" id="gi0-wP-boD"/>
+                            <outlet property="delegate" destination="XY2-lL-ZkV" id="iWF-Xd-Vcx"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="QFF-uP-yvj">
                         <nil key="title"/>
                         <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="3rk-Tg-P5W">
                             <rect key="frame" x="192" y="8" width="216" height="29"/>
@@ -47,7 +30,7 @@
                             </segments>
                             <color key="tintColor" red="0.29085952043533325" green="0.20994566380977631" blue="0.14615128934383392" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
-                                <action selector="dateSegmentValueChanged:" destination="9pv-A4-QxB" eventType="valueChanged" id="8Q7-L0-HyE"/>
+                                <action selector="dateSegmentValueChanged:" destination="XY2-lL-ZkV" eventType="valueChanged" id="Gv3-IN-Iii"/>
                             </connections>
                         </segmentedControl>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Rvq-hH-v6P">
@@ -57,16 +40,14 @@
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="dateSegment" destination="3rk-Tg-P5W" id="cId-GD-AeO"/>
-                        <outlet property="tableView" destination="aqd-Jx-Pb0" id="xO0-zy-RXd"/>
-                        <segue destination="dfW-is-uL0" kind="show" identifier="showMeetingDetail" id="JZM-Oq-Y0c"/>
+                        <outlet property="dateSegment" destination="3rk-Tg-P5W" id="xCt-jV-RZr"/>
+                        <segue destination="dfW-is-uL0" kind="show" identifier="showMeetingDetail" id="Wi9-PD-UyT"/>
                     </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="y57-oc-8ZH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1592" y="-696"/>
+            <point key="canvasLocation" x="1547" y="-696"/>
         </scene>
         <!--会议详情-->
         <scene sceneID="oBM-F6-0EI">

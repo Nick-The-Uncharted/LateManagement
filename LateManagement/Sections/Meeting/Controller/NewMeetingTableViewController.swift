@@ -36,9 +36,51 @@ class NewMeetingTableViewController: FormViewController {
                 row in
                 row.title = "会议地点"
             }
+            <<< PickerInlineRow<String>("punishmentType") {
+                row in
+                row.title = "惩罚类型"
+                row.value = "自定义"
+                row.options = ["自定义", "线性增加", "一视同仁"]
+            }
+            <<< TextRow("customDescrption"){
+                row in
+                row.title = "自定义描述"
+                row.hidden = Condition.Function(["punishmentType"]) {
+                    form in
+                    let row: PickerInlineRow<String>? = form.rowByTag("punishmentType")
+                    if let value = row?.value {
+                        return value != "自定义"
+                    }
+                    return true
+                }
+            }
             <<< IntRow("unitPrice") {
                 row in
                 row.title = "惩罚单价(每分钟)"
+                row.hidden = Condition.Function(["punishmentType"]) {
+                    form in
+                    let row: PickerInlineRow<String>? = form.rowByTag("punishmentType")
+                    if let value = row?.value {
+                        return value != "线性增加"
+                    }
+                    return true
+                }
+            }
+            <<< IntRow("price") {
+                row in
+                row.title = "罚款数"
+                row.hidden = Condition.Function(["punishmentType"]) {
+                    form in
+                    let row: PickerInlineRow<String>? = form.rowByTag("punishmentType")
+                    if let value = row?.value {
+                        return value != "一视同仁"
+                    }
+                    return true
+                }
+            }
+            <<< TextRow("punishmentComment") {
+                row in
+                row.title = "惩罚备注"
             }
             <<< DateInlineRow("date") {
                 row in
@@ -92,16 +134,38 @@ class NewMeetingTableViewController: FormViewController {
         } else if (values["location"] as? String)?.isEmpty != false {
             LoadingAnimation.showAndDismiss("会议地点不能为空")
             return false
-        } else {
-            let unitPrice = values["unitPrice"] as? Int
-            if unitPrice == nil {
-                LoadingAnimation.showAndDismiss("惩罚单价不能为空")
-                return false
-            } else if unitPrice <= 0 {
-                LoadingAnimation.showAndDismiss("惩罚单价必须为正数")
-                return false
+        }
+        
+        if let punishmentType = values["punishmentType"] as? String {
+            switch punishmentType {
+            case "自定义":
+                if (values["customDescrption"] as? String)?.isEmpty != false {
+                    LoadingAnimation.showAndDismiss("自定义惩罚描述不能为空")
+                    return false
+                }
+            case "线性增加":
+                let unitPrice = values["unitPrice"] as? Int
+                if unitPrice == nil {
+                    LoadingAnimation.showAndDismiss("惩罚单价不能为空")
+                    return false
+                } else if unitPrice <= 0 {
+                    LoadingAnimation.showAndDismiss("惩罚单价必须为正数")
+                    return false
+                }
+            case "一视同仁":
+                let unitPrice = values["price"] as? Int
+                if unitPrice == nil {
+                    LoadingAnimation.showAndDismiss("总价不能为空")
+                    return false
+                } else if unitPrice <= 0 {
+                    LoadingAnimation.showAndDismiss("总价必须为正数")
+                    return false
+                }
+            default:
+                break
             }
         }
+        
         return true
     }
     
@@ -117,14 +181,46 @@ class NewMeetingTableViewController: FormViewController {
             location = values["location"] as? String,
             startTime = values["startTime"] as? NSDate,
             endTime = values["endTime"] as? NSDate,
-            teamId = loginUser.teams.first?.id
+            date = values["date"] as? NSDate,
+            teamId = loginUser.teams.last?.id,
+            punishmentType = values["punishmentType"] as? String
         else {return}
+        let punishmentComment = (values["punishmentComment"] as? String) ?? ""
+        
+        var extraName = ""
+        var extra: AnyObject = 1
+        var punishmentTypeInEnglish = ""
+        switch punishmentType {
+        case "自定义":
+            punishmentTypeInEnglish = "userdefined"
+            extraName = "desc"
+            extra = (values["customDescrption"] as? String) ?? ""
+        case "线性增加":
+            punishmentTypeInEnglish = "linear"
+            extraName = "unitPrice"
+            extra = (values["unitPrice"] as? Int) ?? ""
+        case "一视同仁":
+            punishmentTypeInEnglish = "same"
+            extraName = "price"
+            extra = (values["price"] as? Int) ?? ""
+        default:
+            break
+        }
+        
+        var dateMoment = moment(date)
+        dateMoment = dateMoment - (dateMoment.hour * dateMoment.hourInSeconds).seconds - (dateMoment.minute * dateMoment.minuteInSeconds).seconds - dateMoment.second.seconds
+        var startTimeMoment = moment(startTime)
+        var endTimeMoment = moment(endTime)
+        
+        startTimeMoment = dateMoment + (startTimeMoment.hour * startTimeMoment.hourInSeconds).seconds + (startTimeMoment.minute * startTimeMoment.minuteInSeconds).seconds + startTimeMoment.second.seconds
+        endTimeMoment = dateMoment + (endTimeMoment.hour * endTimeMoment.hourInSeconds).seconds + (endTimeMoment.minute * endTimeMoment.minuteInSeconds).seconds + endTimeMoment.second.seconds
         
         guard !(name.isEmpty || location.isEmpty || teamId.isEmpty) else {return}
         if let searchUserVC = segue.destinationViewController as? SearchUserTableViewController {
             searchUserVC.dismissCallback = {
                 users in
-                Meeting.new(name, location: location, startTime: moment(startTime), endTime: moment(endTime), teamId: teamId) {
+                CustomTabBarController.becomeRootViewController()
+                Meeting.new(name, location: location, startTime: startTimeMoment, endTime: endTimeMoment, teamId: teamId, punishmentType: punishmentTypeInEnglish, punishmentComment: punishmentComment, extraName: extraName, extra: extra) {
                     meeting, error in
                     if let error = error {
                         ErrorHandlerCenter.handleError(error, sender: self)
@@ -139,5 +235,11 @@ class NewMeetingTableViewController: FormViewController {
                 }
             }
         }
+    }
+}
+
+extension String: CustomStringConvertible {
+    public var description: String {
+        return self
     }
 }

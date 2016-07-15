@@ -11,7 +11,7 @@ import DZNEmptyDataSet
 
 extension UITableViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
     public func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
-        return NSAttributedString(string: "没数据呢")
+        return NSAttributedString(string: "没数据呢", attributes: [NSFontAttributeName: UIFont.systemFontOfSize(16)])
     }
     
     public func emptyDataSetShouldAllowScroll(scrollView: UIScrollView!) -> Bool {

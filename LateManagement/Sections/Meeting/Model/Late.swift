@@ -7,13 +7,39 @@
 //
 
 import Foundation
+import SwiftyJSON
 
-class Late {
-    var user: User
+class LateDetail: JSONInitialable {
     var duration: Int
+    var id: String
     
-    init(user: User, duration: Int) {
-        self.user = user
+    init() {
+        self.id = "id"
+        self.duration = -1
+    }
+    
+    init(duration: Int) {
+        self.id = "not Set"
         self.duration = duration
+    }
+    
+    required init?(json: JSON) {
+        self.id = json["id"].stringValue
+        self.duration = json["duration"].intValue
+    }
+}
+
+class Late: JSONInitialable {
+    var user: User
+    var lateDetail: LateDetail
+    
+    required init?(json: JSON) {
+        self.user = User(json: json) ?? User()
+        self.lateDetail = LateDetail(json: json["late"]) ?? LateDetail()
+    }
+    
+    init(user: User, duration: Int = 0) {
+        self.user = user
+        self.lateDetail = LateDetail(duration: duration)
     }
 }

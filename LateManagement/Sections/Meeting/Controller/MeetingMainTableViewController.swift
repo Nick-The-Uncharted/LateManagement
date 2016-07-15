@@ -11,8 +11,7 @@ import CBStoreHouseRefreshControl
 import SwiftMoment
 import DZNEmptyDataSet
 
-class MeetingMainTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    @IBOutlet weak var tableView: UITableView!
+class MeetingMainTableViewController: UITableViewController {
     var meetings = [Meeting]()
     var notFilteredMeetings = [Meeting]()
     var storeHouseRefreshControl: CBStoreHouseRefreshControl?
@@ -94,16 +93,16 @@ class MeetingMainTableViewController: UIViewController, UITableViewDataSource, U
         return self.meetings[indexPath.row]
     }
 
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return meetings.count
     }
 
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(indexPath: indexPath) as MeetingTableViewCell
         if let meeting = meetingAtIndexPath(indexPath) {
             cell.udpateWithMeeting(meeting)
@@ -112,7 +111,7 @@ class MeetingMainTableViewController: UIViewController, UITableViewDataSource, U
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         guard let meeting = meetingAtIndexPath(indexPath) else {return}
         self.performSegueWithIdentifier("showMeetingDetail", sender: meeting)
     }
@@ -123,22 +122,26 @@ class MeetingMainTableViewController: UIViewController, UITableViewDataSource, U
         }
     }
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
         self.storeHouseRefreshControl?.scrollViewDidScroll()
     }
     
-    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    override func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         self.storeHouseRefreshControl?.scrollViewDidEndDragging()
     }
 }
 
-extension MeetingMainTableViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
-    func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+extension MeetingMainTableViewController {
+    override func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
         return NSAttributedString(string: self.isLoading ? "Loading……" : "没有会议哦~")
     }
     
-    func emptyDataSetShouldAllowScroll(scrollView: UIScrollView!) -> Bool {
+    override func emptyDataSetShouldAllowScroll(scrollView: UIScrollView!) -> Bool {
         return true
     }
     
+    
+    func verticalOffsetForEmptyDataSet(scrollView: UIScrollView!) -> CGFloat {
+        return -100
+    }
 }

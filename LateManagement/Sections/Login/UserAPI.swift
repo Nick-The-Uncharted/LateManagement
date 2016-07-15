@@ -19,6 +19,6 @@ class UserAPI {
     }
     
     static func getPunishments(completionHandler: ([Punishment]?, MyError?) -> Void) {
-        Alamofire.request(.GET, "\(baseUrl)/late/me)").responseMyArray(completionHandler)
+        Alamofire.request(.GET, "\(baseUrl)late/myRecords").responseMyArray(completionHandler)
     }
 }

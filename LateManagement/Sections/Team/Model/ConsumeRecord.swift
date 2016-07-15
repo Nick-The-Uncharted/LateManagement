@@ -7,7 +7,23 @@
 //
 
 import Foundation
+import SwiftMoment
+import SwiftyJSON
 
-class ConsumeRecord {
+class ConsumeRecord: JSONInitialable {
+    var time: Moment
+    var total: Int
+    var name: String
     
+    required init?(json: JSON) {
+        self.time = json["time"].time
+        self.total = json["total"].intValue
+        self.name = json["desc"].stringValue
+    }
+    
+    init() {
+        self.time = moment()
+        self.total = 0
+        self.name = "heihehi"
+    }
 }

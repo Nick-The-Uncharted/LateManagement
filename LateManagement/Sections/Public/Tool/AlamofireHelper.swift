@@ -39,6 +39,7 @@ class AlamofireHelper {
     static private func getArraySerializer<T: JSONInitialable>(_: T.Type) -> ResponseSerializer<[T], MyError> {
         return ResponseSerializer<[T], MyError> { request, response, data, error in
             if error != nil {
+                log.error("\(error)")
                 return .Failure(.ServerError("\(response?.statusCode ?? -1)"))
             } else if let data = data {
                 let json = JSON(data: data)

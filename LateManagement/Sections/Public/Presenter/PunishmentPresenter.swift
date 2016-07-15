@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension Punishment: AvatarPresentable, TitlePresentable, ContentPresentable {
     var avatarURL: NSURL {
@@ -18,6 +19,18 @@ extension Punishment: AvatarPresentable, TitlePresentable, ContentPresentable {
     }
     
     var content: String {
-        return "￥\(self.total)"
+        return "\(self.total)元"
+    }
+    
+    
+    func fillLabelWithTitle(label: UILabel) {
+        label.font = UIFont.systemFontOfSize(16)
+        label.text = self.title
+        
+    }
+    
+    func fillLabelWithContent(label: UILabel) {
+        label.text = self.content
+        label.textColor = UIColor.flatRedColor()
     }
 }
